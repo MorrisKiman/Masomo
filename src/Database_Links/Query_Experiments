@@ -1,0 +1,16 @@
+
+1. get list of all students and their subjects{
+    create view SjNm_Map as
+    select AdminNo, Fname, ONames, Date_Admitted, Class_ID,
+    StudentSubjects.StudentID, StudentSubjects.SubjID,
+    Subjects.Sub_Name, Subjects.Importance from Student inner join StudentSubjects on
+    Student.AdminNo = StudentSubjects.StudentID
+    inner join Subjects on StudentSubjects.SubjID = Subjects.Sub_ID;
+
+}//it works fine
+
+2. a modification of the one above{
+       select StudentID, SubjID, Active, Subjects.Sub_Name, Subjects.Importance
+       from StudentSubjects inner join Subjects on
+       Subjects.Sub_ID = StudentSubjects.SubjID where StudentSubjects.StudentID = 1;
+}
