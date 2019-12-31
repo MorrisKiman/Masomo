@@ -4,15 +4,16 @@ import Database_Links.DB_API;
 import Database_Links.Kommon_Kweries;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Student_Update extends JPanel {
+public class Student_Update extends JPanel{
     private JLabel jcomp1;
     private JButton btn_search;
     private JTextField txt_searchAdmin;
@@ -49,6 +50,7 @@ public class Student_Update extends JPanel {
         frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add (new Student_Update());
         frame.pack();
+        frame.setLocationRelativeTo(null);//sets the location of the JFrame to the center of the screen
         frame.setVisible (true);
 
     }//end of main method
@@ -58,9 +60,9 @@ public class Student_Update extends JPanel {
         //construct preComponents
         String[] jcomp5Items = {"Edit Details", "Edit Subjects"};
         String[] cbx_ClassesItems = comQueries.getCLasses();
-        String[] list_electivesItems = {"Physics", "Biology", "Religious Education", "Geography", "History", "Option1", "Option2", "Drawing & Design", "Agriculture", "Computer Studies"};
-        String[] list_mandatoriesItems = {"Mathematics", "English", "Kiswahili", "Chemistry"};
+        String[] list_mandatoriesItems = {};
         String[] cbx_subTypesItems = {"Electives", "Optionals"};
+        String[] list_electivesItems = {};
         String[] list_NewSubsItems = {"Item 1", "Item 2", "Item 3"};
         String[] cbx_GenderItems = {"M", "F"};
 
@@ -75,14 +77,14 @@ public class Student_Update extends JPanel {
         jcomp8 = new JLabel ("First Name:");
         jcomp9 = new JLabel ("Other Names:");
         jcomp10 = new JLabel ("Admission Number:");
-        lbl_adminNo = new JLabel ("0101010");
+        lbl_adminNo = new JLabel ("|-x-x-x-x-|");
         txt_FIrstName = new JTextField (5);
         txt_OtherNaames = new JTextField (5);
         jcomp14 = new JLabel ("Class:");
         cbx_Classes = new JComboBox (cbx_ClassesItems);
         jcomp16 = new JTextField (5);
         jcomp17 = new JLabel ("Subjects taken by the Student");
-        btn_SaveDets = new JButton ("Save Details");
+        btn_SaveDets = new JButton ("Save Changes");
         list_electives = new JList (list_electivesItems);
         list_mandatories = new JList (list_mandatoriesItems);
         jcomp21 = new JLabel ("Mandatory");
@@ -93,6 +95,14 @@ public class Student_Update extends JPanel {
         btn_saveSubjects = new JButton ("Save Subject Changes");
         jcomp27 = new JLabel ("Gender:");
         cbx_Gender = new JComboBox (cbx_GenderItems);
+
+        DefaultListModel listModel = new DefaultListModel();
+        DefaultListModel modelMandatory = new DefaultListModel();
+        DefaultListModel newSubModel = new DefaultListModel();
+        list_electives.setModel(listModel);
+        list_mandatories.setModel(modelMandatory);
+        list_NewSubs.setModel(newSubModel);
+        //list_NewSubs.setModel();
 
         //set components properties
         jcomp6.setEnabled (false);
@@ -157,7 +167,7 @@ public class Student_Update extends JPanel {
         cbx_Classes.setBounds (360, 130, 98, 25);
         jcomp16.setBounds (0, 189, 681, 6);
         jcomp17.setBounds (221, 195, 218, 25);
-        btn_SaveDets.setBounds (285, 160, 127, 25);
+        btn_SaveDets.setBounds (285, 160, 135, 25);
         list_electives.setBounds (210, 265, 156, 185);
         list_mandatories.setBounds (27, 265, 156, 185);
         jcomp21.setBounds (57, 230, 85, 25);
@@ -191,7 +201,14 @@ public class Student_Update extends JPanel {
         btn_search.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-
+                //empty the list boxes
+                //list_electives.setModel(null);
+                modelMandatory.clear();
+                listModel.clear();
+                newSubModel.clear();
+                lbl_adminNo.setText("|-x-x-x-x-|");
+                txt_FIrstName.setText("");
+                txt_OtherNaames.setText("");
 
                 if (txt_searchAdmin.getText().length()==0){
                     JOptionPane.showMessageDialog(null, "Please enter the Admission number of\nthe student whose details\nyou wish to edit");
@@ -199,6 +216,19 @@ public class Student_Update extends JPanel {
                 } else{
                     int start = getStudentDetails(Integer.parseInt(txt_searchAdmin.getText()));
                     String [][] theSubjects = comQueries.getSubjects(txt_searchAdmin.getText());
+
+                    System.out.println("The length of the array table is===> "+theSubjects.length);
+                    String [] toMandatoryList = new String[theSubjects.length];
+
+                    for (int i = 0; i < theSubjects.length; i++){
+
+                    }
+                    //empty the list boxes
+                    //list_electives.setModel(null);
+                    modelMandatory.clear();
+                    listModel.clear();
+                    newSubModel.clear();
+
 
                     //get the subjects and load them into the list boxes
                     System.out.println("\n\n");
@@ -214,6 +244,27 @@ public class Student_Update extends JPanel {
                         System.out.println("\n");
                     }//end for
 
+                    //loading the searched student's subjects into the lists on the UI
+                    String [] aalSbj = new String[theSubjects[0].length];
+                    int counter1 = 0;
+                    int counter2 = 0;
+
+                    for (int r = 0; r < theSubjects[0].length; r++){
+
+
+                        if (theSubjects[2][r].contains("1")){
+                            modelMandatory.add(counter1,theSubjects[0][r]); //list of mandatory subjects
+                            counter1++;
+                        } else {
+                            listModel.add(counter2, theSubjects[0][r]); //list of optional subjects
+                            counter2++;
+                        }
+
+                        //(theSubjects[0][r]);
+
+                    }//end for
+                    //list_electives = new JList();
+
                     if(start == 0){
                         JOptionPane.showMessageDialog(null, "Something went wrong");
 
@@ -224,6 +275,50 @@ public class Student_Update extends JPanel {
                 }
             }
         });//end of searching for student
+
+        //After loading subjects done by students to the lists, lets decide what to do with them
+
+        //1. Remove the subject selected
+        MouseListener mouseListener = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) {
+
+
+                    String selectedItem = (String) list_electives.getSelectedValue();
+                    int selectedinx = list_electives.getSelectedIndex();
+                    System.out.println("Selected Item = "+ selectedItem + "\nSelected Index = "+ selectedinx);
+
+                    JOptionPane.showMessageDialog(null, "Are you sure you want to remove \n"
+                            +selectedItem+ " from "+txt_FIrstName.getText()+"'s\n" +
+                            "subjects list?");
+
+                }
+            }
+        };//mouse listener thingy
+
+        list_electives.addMouseListener(mouseListener);
+
+
+        //end of optionals list clicking
+
+        //2. On item change on the combobox, we should see a change in the subjects
+        cbx_subTypes.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                String [][] byImportance = new String[2][];
+                if (cbx_subTypes.getSelectedIndex()==0){
+                    String importance = "3";
+                    comQueries.getSpecSubjects(importance);
+                   // byImportance = new String[2][comQueries.getSpecSubjects(importance)[].size()];
+
+                } else if (cbx_subTypes.getSelectedIndex()==1){
+                    String importance = "2";
+                    //fill the JList with elective subjects
+                    comQueries.getSpecSubjects(importance);
+                }
+            }
+        });
+        //end of getting the elective/optional subjects
 
     }//end of UI creation
 
@@ -243,12 +338,13 @@ public class Student_Update extends JPanel {
             //run dis ting
             ResultSet rs = stat.executeQuery();
             if(rs.next()){
-                System.out.print(rs.getString("AdminNo"));
-                System.out.print("\t|| "+rs.getString("Fname"));
-                System.out.print("\t|| "+rs.getString("Onames"));
+                lbl_adminNo.setText(rs.getString("AdminNo"));
+                txt_FIrstName.setText(rs.getString("Fname"));
+                txt_OtherNaames.setText(rs.getString("Onames"));
                 System.out.print("\t|| "+rs.getString("House")+"\n");
                 String er = comQueries.getCLasses(rs.getString("Class_ID"));
                 System.out.println("The Class Is==>" +er);
+
 
 
                 ret = 1;
@@ -264,7 +360,17 @@ public class Student_Update extends JPanel {
         }//end of Try catch
 
         return ret;
-    }
+    }//end of getting the student's details
+
+    //2. Add or delete a subject from the student's list of subjects.
+    private boolean subjectChange(String changeType, String subj_ID){
+        String query1 = "delete this subject from the list of subjects of this guy";
+        String query2 = "add this subject to the list of subjects of this guy";
+        boolean successful = false;
+
+        return successful;
+
+    }//end of editing the subjects details
 
 
 }//end class

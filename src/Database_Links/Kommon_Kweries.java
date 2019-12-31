@@ -160,5 +160,67 @@ public class Kommon_Kweries {
 
     }//end of getting subjects
 
+    //4. getting specific subject types
+    public  String[][] getSpecSubjects(String importance){
+        System.out.println("Ok Boss.. getting all the subjects whose importance = "+ importance);
+        int nO = 0;
+        String[][] myList = new String[0][0];
+
+        String query = "select * from Subjects where Importance = ?";
+        String query2 = "select count(Sub_Name) from Subjects where Importance = ?";
+        try{
+            Connection kon = DB_API.getKonnection();
+            PreparedStatement stat = kon.prepareStatement(query);
+            PreparedStatement stat2 = kon.prepareStatement(query2);
+
+            stat.setString(1, importance);
+            stat2.setString(1, importance);
+
+            //execute query
+            System.out.println("Everything is set to get that those subjects from the database.");
+            ResultSet rs = stat.executeQuery();
+            ResultSet rs2 = stat2.executeQuery();
+
+            //1. Get the number of subjects of the selected category to initialize the ArrayList
+            if(rs2.next()==true){
+                System.out.println("Yup, we got all that stuff in the db.");
+                nO = Integer.parseInt(rs2.getString("count(Sub_Name)"));
+            } else {
+                System.out.println("Nothing matching that was found in the db.");
+            }
+
+            myList = new String[2][nO];
+            int counter = 0;
+            int counter1 = 0;
+
+            //2. start statcking up the arraylist
+            System.out.println("Filling the 2 Dimensional array.");
+            while (rs.next()==true ){
+                myList[counter][counter1] = rs.getString("Sub_ID");
+                myList[counter+1][counter1] = rs.getString("Sub_Name");
+
+                //increment the counter
+                counter = 0;
+                //reset the counter for the header array
+                counter1++;
+
+            }//end while
+
+            for (int i=0; i< myList.length; i++){
+                for(int r = 0; r < myList[i].length; r++){
+                    System.out.println(i+" <=Col_index Row_Index=> "+r+" Subjects=> "+myList[i][r]);
+                }
+                System.out.println("\nNext..");
+            }
+
+
+        }catch (SQLException ex){
+            System.out.println("Noma bro==>\n"+ex);
+            ex.printStackTrace();
+        }//end try catch
+
+        return myList;
+
+    }//end of getting subjects
 
 }//end class

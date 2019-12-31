@@ -14,3 +14,17 @@
        from StudentSubjects inner join Subjects on
        Subjects.Sub_ID = StudentSubjects.SubjID where StudentSubjects.StudentID = 1;
 }
+
+
+Insert_Student.main(new String[]{}); ==> opening a new JPanel
+
+
+////////////////////////////
+int[] selectedIndices = list_electives.getSelectedIndices();
+
+                //get all the selected items using the indices
+                for (int i = 0; i < selectedIndices.length; i ++){
+                    Object sel = list_electives.getModel().getElementAt(selectedIndices[i]);
+                    System.out.println("Haha, gotcha==> "+ list_electives.getModel().getElementAt(selectedIndices[i]));
+                }//end for loop
+//////////////////////////////////

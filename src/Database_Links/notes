@@ -1,0 +1,51 @@
+There are special things I would like to document here...
+
+The first is about multi dimensional arrays which I have used
+very explicitly. I found that when dealing with a multi-dimensional array, the first column is always fixed as it acts as the
+header array.  and the rest will be the size of the data that you intend to upload on to it. ie, if I want to have a table with
+two columns, it will be something like this==> <Array datatype>[][] <array name> = new <Array Datatype>[Column number][data size]
+
+So.. If we take the example that I had given for a two column multidimesional array, probably of strings, we would do it like this..
+
+1. Declare the array type and explicitly declare the number of columns which in this case is 2
+    String[][] myMD_Array = new String[2][];
+2. Find a way to know the size of the data that you are loading into the array. It could be from a database or user defined.
+      myMD_Array = new String[2][5];
+3. Declare variables which you will use to add data into the arrays. You will need two...
+    i. int col = 0; ==>Initialized from zero. It will control which column the data will be put inserted.
+    ii. int row = 0; ==> It will control the index at which the data will be inserted.
+    The variable names can be whatever you choose but I hope you get the idea..
+
+There are also two ways you can populate you array now. You can use a For Loop if the data you are entering is from the user
+or if it from the database, you can use a while loop. Again this is purely on preference. I will start with the while loop.
+Remember that our two variables are at zero.
+
+    while (you have data available){
+        myMD_Array[col][row] = string_1; ==> goes into the first column.
+        myMD_Array[col++][row] = string_1; ==> goes into the second column.
+
+        //Above, we have two pieces of related data on two different columns but share the same row index
+
+        row++;//Increment the row until we reach the max size of the data we are entering
+        col = 0; //re-initialize the column to index zero so that in the next loop, we go back to enter data in the first column but next row index.
+
+    }//end of while loop
+
+In the case of the for loop, I use it to get data from the multi dimensional array. It will be a nested for loop. The first will loop through the
+number of columns I have and the second will spit out the rows. For example
+
+    for (int col = 0; col <= myMD_Array.size(); col ++){
+
+        for(int row = 0; row <= myMD_Array[2].size(); col ++){
+            //wherever you will output the data, probably on console
+            system.out.println("data on Column"+ col+"Row index "+ row +":=> " + myMD_Array[col][row]);
+
+           /* The code above will print all the rows in the column col and jump out of the loop then go back in again until
+           all the data in all columns is done */
+
+        }//end of getting data in the row
+    }//end of getting the columns
+
+You can tweak the code above to work in your favor... Have a blast.
+
+======================================================================================================================================

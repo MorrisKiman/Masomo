@@ -2,6 +2,7 @@
     author @Morris_Keymoney
  */
 import Database_Links.DB_API;
+import Database_Links.Cookie;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -27,6 +28,8 @@ public class Login extends JPanel {
         frame.setDefaultCloseOperation (JFrame.HIDE_ON_CLOSE);
         frame.getContentPane().add (new Login());
         frame.pack();
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);//sets the location of the JFrame to the center of the screen
         frame.setVisible (true);
     }//end of main
 
@@ -72,7 +75,9 @@ public class Login extends JPanel {
                 String pwd = String.valueOf(password.getPassword());
                 if (login_Seq(userName.getText(), pwd) == 1){
                     System.out.println("Chonjo brathe");
+                    setBackground(Color.green);
                     JOptionPane.showMessageDialog(null, "Login Successful!");
+                    setBackground(Color.WHITE);
                     userName.setText("");
                     password.setText("");
 
@@ -81,7 +86,9 @@ public class Login extends JPanel {
 
                 }else{
                     System.out.println("UUUUIIIIIII!!!!!!");
+                    setBackground(Color.red);
                     JOptionPane.showMessageDialog(null, "Login Failed!");
+                    setBackground(Color.LIGHT_GRAY);
                     userName.setText("");
                     password.setText("");
                 }
@@ -112,6 +119,7 @@ public class Login extends JPanel {
             } else {
                 //messagebox to confirm its true
                 System.out.println("Cool Bruh");
+                Cookie.username = rs.getString("Full_Names");
                 lgStat = 1;
             }//end if
 
